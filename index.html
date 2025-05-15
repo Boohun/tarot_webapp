@@ -9,10 +9,10 @@
     body { font-family: sans-serif; text-align: center; margin: 0; padding: 20px; }
     h1 { margin-bottom: 10px; }
     .radio-group { margin: 10px 0; }
-    .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(80px, 1fr)); gap: 10px; max-width: 600px; margin: 20px auto; }
-    .card { width: 100%; cursor: pointer; transition: transform 0.3s; }
+    .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(80px, 1fr)); gap: 10px; max-width: 960px; margin: 20px auto; }
+    .card { width: 100%; cursor: pointer; transition: transform 0.3s; border-radius: 6px; }
     .card.reversed { transform: rotate(180deg); }
-    #results { margin-top: 20px; font-size: 1.1em; }
+    #results { margin-top: 20px; font-size: 1.1em; white-space: pre-line; }
     button { padding: 10px 20px; font-size: 16px; margin-top: 10px; background: gold; border: none; cursor: pointer; }
   </style>
 </head>
@@ -62,11 +62,13 @@ function shuffle() {
   }
 
   for (let i = 0; i < names.length; i++) {
+    const name = names[i];
     const card = document.createElement('img');
     card.src = 'cards/back.jpg';
-    card.alt = 'Tarot card';
+    card.alt = name;
     card.className = 'card';
-    card.dataset.name = names[i];
+    card.dataset.name = name;
+    card.dataset.picked = 'false';
     card.addEventListener('click', () => pickCard(card));
     cardGrid.appendChild(card);
   }
@@ -82,7 +84,7 @@ function pickCard(card) {
   card.dataset.picked = 'true';
   picked++;
   pickedCards.push(`${name} (${orientation})`);
-  resultsDiv.innerHTML = pickedCards.join('<br>');
+  resultsDiv.innerHTML = pickedCards.join('\n');
 }
 
 fetch("cards/index.json")
