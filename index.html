@@ -125,17 +125,22 @@ function pickCard(card) {
   const name = card.dataset.name;
   const orientation = Math.random() > 0.5 ? 'Upright' : 'Reversed';
   card.src = 'cards/' + name + '.png';
+
   if (orientation === 'Reversed') card.classList.add('reversed');
   card.dataset.picked = 'true';
   picked++;
   pickedCards.push(`${name} (${orientation})`);
-  resultsDiv.innerHTML = pickedCards.join('\\n');
+  resultsDiv.innerHTML = pickedCards.join('\n');
 
   if (picked === maxPick) {
-    alert(`You've picked ${maxPick} cards.`);
-    navigator.clipboard.writeText(pickedCards.join('\\n'))
-      .then(() => alert("Copied to clipboard."))
-      .catch(err => alert("Copy failed: " + err));
+    requestAnimationFrame(() => {
+      setTimeout(() => {
+        alert(`You've picked ${maxPick} cards.`);
+        navigator.clipboard.writeText(pickedCards.join('\n'))
+          .then(() => alert("Copied to clipboard."))
+          .catch(err => alert("Copy failed: " + err));
+      }, 300); // 약간의 렌더링 유예
+    });
   }
 }
 
