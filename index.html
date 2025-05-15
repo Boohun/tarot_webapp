@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,15 +8,40 @@
     body { font-family: sans-serif; text-align: center; margin: 0; padding: 20px; }
     h1 { margin-bottom: 10px; }
     .radio-group { margin: 10px 0; }
-    .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(80px, 1fr)); gap: 10px; max-width: 960px; margin: 20px auto; }
-    .card { width: 100%; cursor: pointer; transition: transform 0.3s; border-radius: 6px; }
-    .card.reversed { transform: rotate(180deg); }
-    #results { margin-top: 20px; font-size: 1.1em; white-space: pre-line; }
-    button { padding: 10px 20px; font-size: 16px; margin-top: 10px; background: gold; border: none; cursor: pointer; }
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+      gap: 10px;
+      max-width: 960px;
+      margin: 20px auto;
+    }
+    .card {
+      width: 100%;
+      cursor: pointer;
+      transition: transform 0.3s;
+      border-radius: 6px;
+    }
+    .card.reversed {
+      transform: rotate(180deg);
+    }
+    #results {
+      margin-top: 20px;
+      font-size: 1.1em;
+      white-space: pre-line;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      margin-top: 10px;
+      background: gold;
+      border: none;
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
   <h1>Tarot Card Picker</h1>
+
   <div class="radio-group" id="radioGroup">
     <label><input type="radio" name="count" value="1"> 1</label>
     <label><input type="radio" name="count" value="2"> 2</label>
@@ -30,69 +54,72 @@
     <label><input type="radio" name="count" value="9"> 9</label>
     <label><input type="radio" name="count" value="10"> 10</label>
   </div>
+
   <div class="card-grid" id="cardGrid"></div>
+
   <button onclick="shuffle()">Shuffle</button>
+
   <div id="results"></div>
 
-<script>
-let cardGrid = document.getElementById('cardGrid');
-let resultsDiv = document.getElementById('results');
-let cardNames = [];
-let maxPick = 3;
-let picked = 0;
-let pickedCards = [];
+  <script>
+    let cardGrid = document.getElementById('cardGrid');
+    let resultsDiv = document.getElementById('results');
+    let cardNames = [];
+    let maxPick = 3;
+    let picked = 0;
+    let pickedCards = [];
 
-document.querySelectorAll('input[name="count"]').forEach(radio => {
-  radio.addEventListener('change', () => {
-    maxPick = parseInt(radio.value);
-    shuffle();
-  });
-});
+    document.querySelectorAll('input[name="count"]').forEach(radio => {
+      radio.addEventListener('change', () => {
+        maxPick = parseInt(radio.value);
+        shuffle();
+      });
+    });
 
-function shuffle() {
-  picked = 0;
-  pickedCards = [];
-  resultsDiv.innerHTML = "";
-  cardGrid.innerHTML = "";
+    function shuffle() {
+      picked = 0;
+      pickedCards = [];
+      resultsDiv.innerHTML = "";
+      cardGrid.innerHTML = "";
 
-  const names = [...cardNames];
-  for (let i = names.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [names[i], names[j]] = [names[j], names[i]];
-  }
+      const names = [...cardNames];
+      for (let i = names.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [names[i], names[j]] = [names[j], names[i]];
+      }
 
-  for (let i = 0; i < names.length; i++) {
-    const name = names[i];
-    const card = document.createElement('img');
-    card.src = 'cards/back.jpg';
-    card.alt = name;
-    card.className = 'card';
-    card.dataset.name = name;
-    card.dataset.picked = 'false';
-    card.addEventListener('click', () => pickCard(card));
-    cardGrid.appendChild(card);
-  }
-}
+      for (let i = 0; i < names.length; i++) {
+        const name = names[i];
+        const card = document.createElement('img');
+        card.src = 'cards/back.jpg';
+        card.alt = name;
+        card.className = 'card';
+        card.dataset.name = name;
+        card.dataset.picked = 'false';
+        card.addEventListener('click', () => pickCard(card));
+        cardGrid.appendChild(card);
+      }
+    }
 
-function pickCard(card) {
-  if (picked >= maxPick || card.dataset.picked === 'true') return;
+    function pickCard(card) {
+      if (picked >= maxPick || card.dataset.picked === 'true') return;
 
-  const name = card.dataset.name;
-  const orientation = Math.random() > 0.5 ? 'Upright' : 'Reversed';
-  card.src = 'cards/' + name + '.png';
-  if (orientation === 'Reversed') card.classList.add('reversed');
-  card.dataset.picked = 'true';
-  picked++;
-  pickedCards.push(`${name} (${orientation})`);
-  resultsDiv.innerHTML = pickedCards.join('\n');
-}
+      const name = card.dataset.name;
+      const orientation = Math.random() > 0.5 ? 'Upright' : 'Reversed';
+      card.src = 'cards/' + name + '.png';
+      if (orientation === 'Reversed') card.classList.add('reversed');
+      card.dataset.picked = 'true';
+      picked++;
+      pickedCards.push(`${name} (${orientation})`);
+      resultsDiv.innerHTML = pickedCards.join('\\n');
+    }
 
-fetch("cards/index.json")
-  .then(res => res.json())
-  .then(data => {
-    cardNames = data;
-    shuffle();
-  });
-</script>
+    fetch("cards/index.json")
+      .then(res => res.json())
+      .then(data => {
+        cardNames = data;
+        shuffle();
+      });
+  </script>
 </body>
 </html>
