@@ -18,6 +18,10 @@
 
     .radio-group {
       margin: 10px 0;
+      flex-wrap: wrap;
+      display: flex;
+      justify-content: center;
+      gap: 6px;
     }
 
     .card-grid {
@@ -71,6 +75,11 @@
     <label><input type="radio" name="count" value="8"> 8</label>
     <label><input type="radio" name="count" value="9"> 9</label>
     <label><input type="radio" name="count" value="10"> 10</label>
+    <label><input type="radio" name="count" value="11"> 11</label>
+    <label><input type="radio" name="count" value="12"> 12</label>
+    <label><input type="radio" name="count" value="13"> 13</label>
+    <label><input type="radio" name="count" value="14"> 14</label>
+    <label><input type="radio" name="count" value="15"> 15</label>
   </div>
 
   <div class="card-grid" id="cardGrid"></div>
@@ -135,11 +144,9 @@ function pickCard(card) {
   if (picked === maxPick) {
     requestAnimationFrame(() => {
       setTimeout(() => {
-        alert(`You've picked ${maxPick} cards.`);
-        navigator.clipboard.writeText(pickedCards.join('\n'))
-          .then(() => alert("Copied to clipboard."))
-          .catch(err => alert("Copy failed: " + err));
-      }, 300); // 약간의 렌더링 유예
+        navigator.clipboard.writeText(pickedCards.join('\n'));
+        alert(`You've picked ${maxPick} cards.\n(Copied to clipboard)`);
+      }, 300);
     });
   }
 }
